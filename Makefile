@@ -72,8 +72,8 @@ build docker_build: $(SOURCES)
 push docker_push:
 	docker tag $(WIP_IMAGE):$(DOCKER_TAG) $(DOCKER_IMAGE):$(DOCKER_TAG)
 	docker tag $(WIP_IMAGE):$(DOCKER_TAG) $(DOCKER_IMAGE):latest
-	docker push $(WIP_IMAGE):$(DOCKER_TAG)
-	docker push $(WIP_IMAGE):latest
+	docker push $(DOCKER_IMAGE):$(DOCKER_TAG)
+	docker push $(DOCKER_IMAGE):latest
 
 output:
 	@echo Docker Image: $(WIP_IMAGE):$(DOCKER_IMAGE):$(DOCKER_TAG)
