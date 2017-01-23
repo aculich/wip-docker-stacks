@@ -57,12 +57,18 @@ test-only:
 	docker rm -f $(CONTAINER_NAME) || true
 	docker run --name $(CONTAINER_NAME) -p 8888:8888 -v$(shell dirname $(shell pwd)):$(WORKDIR) -e GRANT_SUDO=yes  -d $(WIP_IMAGE):$(DOCKER_TAG) $(COMMAND)
 	docker ps
+	sleep 3; docker logs $(CONTAINER_NAME)
 
 shell:
 	docker exec -it $(CONTAINER_NAME) /bin/bash
 
-build docker_build: $(SOURCES)
+docker_build: $(SOURCES)
 	docker build \
+	-t $(WIP_IMAGE):$(DOCKER_TAG) .
+	docker tag $(WIP_IMAGE):$(DOCKER_TAG) $(WIP_IMAGE):latest
+
+publish: build
+	docker build -f Dockerfile.publish \
   --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
   --build-arg VERSION=$(CODE_VERSION) \
   --build-arg VCS_URL=`git config --get remote.origin.url` \
